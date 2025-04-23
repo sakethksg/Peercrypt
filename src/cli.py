@@ -3,6 +3,7 @@ import sys
 import os
 import socket
 import time
+import json
 from typing import Optional, List, Tuple
 from colorama import init, Fore, Style
 try:
@@ -85,6 +86,15 @@ class FileTransferCLI:
             for i, (host, port) in enumerate(active_peers):
                 print(f"  {i+1}. {host}:{port}")
         
+        # Get reliable peers with reliability scores
+        reliable_peers = self.peer_discovery.get_reliable_peers(min_reliability=0.5)
+        if reliable_peers:
+            print(f"\n{Fore.GREEN}Most reliable peers:{Style.RESET_ALL}")
+            for i, (host, port, reliability) in enumerate(reliable_peers[:5]):  # Show top 5
+                reliability_percent = int(reliability * 100)
+                reliability_color = Fore.GREEN if reliability_percent > 80 else Fore.YELLOW if reliability_percent > 50 else Fore.RED
+                print(f"  {i+1}. {host}:{port} - Reliability: {reliability_color}{reliability_percent}%{Style.RESET_ALL}")
+        
         # Add gossip protocol status
         print(f"\n{Fore.CYAN}=== Gossip Protocol Status ==={Style.RESET_ALL}")
         if hasattr(self.peer_discovery, 'running') and self.peer_discovery.running:
@@ -97,14 +107,14 @@ class FileTransferCLI:
             current_time = time.time()
             with self.peer_discovery.lock:
                 for peer_id, peer in self.peer_discovery.peers.items():
-                    if current_time - peer.last_seen >= self.peer_discovery.gossip_interval * 3:
-                        inactive_peers.add((peer.host, peer.port, peer.last_seen))
+                    if peer.status == 'inactive':
+                        inactive_peers.add((peer.host, peer.port, peer.last_seen, peer.failed_attempts))
             
             if inactive_peers:
                 print(f"\n{Fore.YELLOW}Inactive peers: {len(inactive_peers)}{Style.RESET_ALL}")
-                for i, (host, port, last_seen) in enumerate(inactive_peers):
+                for i, (host, port, last_seen, failed_attempts) in enumerate(inactive_peers):
                     time_ago = int(current_time - last_seen)
-                    print(f"  {i+1}. {host}:{port} (last seen {time_ago} seconds ago)")
+                    print(f"  {i+1}. {host}:{port} (last seen {time_ago} seconds ago, {failed_attempts} failed attempts)")
         else:
             print(f"Status: {Fore.RED}Inactive{Style.RESET_ALL}")
             print(f"Use 'gossip on' to enable gossip-based peer discovery")
@@ -128,6 +138,22 @@ class FileTransferCLI:
             file_size = os.path.getsize(filepath)
             filename = os.path.basename(filepath)
             
+            # Verify target is reachable
+            peer_id = f"{target_host}:{target_port}"
+            with self.peer_discovery.lock:
+                if peer_id in self.peer_discovery.peers:
+                    peer = self.peer_discovery.peers[peer_id]
+                    if peer.status == 'inactive':
+                        print(f"{Fore.YELLOW}Warning: Peer {target_host}:{target_port} was previously marked as inactive.{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}Attempting to reconnect...{Style.RESET_ALL}")
+                        # Try to perform a health check
+                        health_check_successful = self._check_peer_health(target_host, target_port)
+                        if not health_check_successful:
+                            print(f"{Fore.RED}Could not reach peer {target_host}:{target_port}. Transfer may fail.{Style.RESET_ALL}")
+                            proceed = input(f"{Fore.YELLOW}Proceed with transfer anyway? (y/n): {Style.RESET_ALL}").lower()
+                            if proceed != 'y':
+                                return
+            
             # Display transfer parameters
             print("\nTransfer Parameters:")
             print(f"File: {filename}")
@@ -139,6 +165,26 @@ class FileTransferCLI:
                 targets = kwargs.get('targets', [(target_host, target_port)])
                 print(f"Mode: Multicast")
                 print(f"Number of targets: {len(targets)}")
+                
+                # Verify all targets are reachable
+                unreachable_targets = []
+                for host, port in targets:
+                    if not self._check_peer_health(host, port):
+                        unreachable_targets.append((host, port))
+                
+                if unreachable_targets:
+                    print(f"{Fore.YELLOW}Warning: {len(unreachable_targets)} target(s) appear to be unreachable:{Style.RESET_ALL}")
+                    for host, port in unreachable_targets:
+                        print(f"  - {host}:{port}")
+                    proceed = input(f"{Fore.YELLOW}Proceed with transfer to remaining targets? (y/n): {Style.RESET_ALL}").lower()
+                    if proceed != 'y':
+                        return
+                    # Filter out unreachable targets
+                    targets = [t for t in targets if t not in unreachable_targets]
+                    if not targets:
+                        print(f"{Fore.RED}No reachable targets remaining. Aborting transfer.{Style.RESET_ALL}")
+                        return
+                
                 for i, (host, port) in enumerate(targets):
                     print(f"Target {i+1}: {host}:{port}")
                 
@@ -194,9 +240,22 @@ class FileTransferCLI:
                     print(f"\nDetailed statistics saved to transfer_stats_{filename}.json")
                 self.successful_transfers += 1
                 self.total_bytes_transferred += file_size
+                
+                # Update peer reliability after successful transfer
+                with self.peer_discovery.lock:
+                    peer_id = f"{target_host}:{target_port}"
+                    if peer_id in self.peer_discovery.peers:
+                        self.peer_discovery.peers[peer_id].reliability = min(1.0, self.peer_discovery.peers[peer_id].reliability + 0.1)
             else:
                 print("Transfer failed")
                 self.failed_transfers += 1
+                
+                # Update peer reliability after failed transfer
+                with self.peer_discovery.lock:
+                    peer_id = f"{target_host}:{target_port}"
+                    if peer_id in self.peer_discovery.peers:
+                        self.peer_discovery.peers[peer_id].failed_attempts += 1
+                        self.peer_discovery.peers[peer_id].reliability = max(0.1, self.peer_discovery.peers[peer_id].reliability - 0.2)
             
         except Exception as e:
             print(f"Error: {str(e)}")
@@ -239,164 +298,53 @@ class FileTransferCLI:
             print(f"Error: {str(e)}")
 
     def show_status(self):
-        """Show current status and detailed command documentation"""
-        print("\nCurrent Status:")
-        print(f"Host: {self.host}")
-        print(f"Port: {self.port}")
-        print(f"Mode: {self.current_mode}")
+        """Show detailed status information and available commands."""
+        print(f"\n{Fore.CYAN}╔══════════════════════════════════════════════╗")
+        print(f"║             PeerCrypt Status                 ║")
+        print(f"╚══════════════════════════════════════════════╝{Style.RESET_ALL}")
         
-        if self.current_mode == "token-bucket":
-            print("\nToken Bucket Status:")
-            print(f"Bucket Size: {self.transfer_modes[self.current_mode].bucket.capacity} tokens")
-            print(f"Token Rate: {self.transfer_modes[self.current_mode].bucket.rate} tokens/sec")
-            print(f"Current Tokens: {self.transfer_modes[self.current_mode].bucket.get_available_tokens()}")
-            print(f"Adaptive Rate: {self.transfer_modes[self.current_mode].bucket.adaptive_rate:.2f} tokens/sec")
-
-        elif self.current_mode == "normal":
-            print("\nNormal Mode Status:")
-            print("No specific status information available for normal mode")
+        self.print_status()
         
-        elif self.current_mode == "parallel":
-            print("\nParallel Mode Status:")
-            print(f"Default Threads: {self.transfer_modes[self.current_mode].default_num_threads}")
-            print(f"Chunk Size: {self.transfer_modes[self.current_mode].chunk_size} bytes")
+        # Calculate the number of peers with connection issues
+        problematic_peers = 0
+        with self.peer_discovery.lock:
+            for peer_id, peer in self.peer_discovery.peers.items():
+                if peer.status == 'inactive' or peer.failed_attempts > 0:
+                    problematic_peers += 1
         
-        elif self.current_mode == "qos":
-            print("\nQoS Status:")
-            print("Priority levels: high, normal, low")
+        print(f"\n{Fore.CYAN}╔══════════════════════════════════════════════╗")
+        print(f"║             Network Status                   ║")
+        print(f"╚══════════════════════════════════════════════╝{Style.RESET_ALL}")
         
-        elif self.current_mode == "aimd":
-            print("\nAIMD Status:")
-            print("Using adaptive congestion control")
-            print("Bandwidth statistics will be saved to CSV")
-            
-            # Add detailed AIMD parameters
-            aimd_config = self.transfer_modes["aimd"].configure()
-            print(f"Window size: {aimd_config['initial_window']//1024} KB")
-            print(f"Min window: {aimd_config['min_window']//1024} KB")
-            print(f"Max window: {aimd_config['max_window']//1024} KB")
-            print(f"Timeout detection: {'Enabled' if aimd_config['timeout_enabled'] else 'Disabled'}")
-            print(f"Triple DupACK detection: {'Enabled' if aimd_config['dupack_enabled'] else 'Disabled'}")
-            print(f"DupACK threshold: {aimd_config['dup_ack_threshold']}")
-            
-            print("\nPerformance Notes:")
-            print("- Larger window sizes can increase throughput but may cause more congestion")
-            print("- Timeout detection is more conservative but works in all network conditions")
-            print("- Triple duplicate ACK detection enables faster recovery from packet loss")
-            print("- Disabling both detection mechanisms will prevent congestion control")
-            print("- For reliable networks, you can set a larger window size and disable timeout detection")
-            print("- For lossy networks, enable both detection mechanisms with a smaller window")
-            
-            print("\nConfigure with: 'congestion' command or when sending files with options:")
-            print("  -w <size>            - Set window size in KB")
-            print("  -no-timeout          - Disable timeout detection")
-            print("  -no-dupack           - Disable duplicate ACK detection")
-            print("  -ack-threshold <num> - Set threshold for duplicate ACKs")
+        print(f"Peer Discovery: {'Active' if self.peer_discovery.running else 'Inactive'}")
+        print(f"Gossip Interval: {self.peer_discovery.gossip_interval} seconds")
+        print(f"Connection Timeout: {self.peer_discovery.timeout} seconds")
+        print(f"Max Retries: {self.peer_discovery.max_retries}")
         
-        elif self.current_mode == "multicast":
-            print("\nMulticast Mode Status:")
-            print("Can send to multiple targets simultaneously")
-            print(f"Base Port: {self.port}")
-            print("Use the multicast-receive command to start a multicast receiver")
+        active_peers = self.peer_discovery.get_active_peers()
+        print(f"Active Peers: {len(active_peers)}")
+        print(f"Problem Peers: {Fore.YELLOW if problematic_peers > 0 else Fore.GREEN}{problematic_peers}{Style.RESET_ALL}")
         
-        print("\nAvailable Commands:")
-        print("\n1. Network Management:")
-        print("  list-peers - List all active peers in the network")
-        print("  join <host> <port> - Join network via bootstrap peer")
-        print("    Example: join 192.168.1.100 5000")
-        print("  gossip [on|off|interval] - Configure gossip-based peer discovery")
-        print("    Example: gossip 10.0 (sets interval to 10 seconds)")
-        print("    Example: gossip off (disables gossip)")
+        print(f"\n{Fore.CYAN}╔══════════════════════════════════════════════╗")
+        print(f"║             Available Commands               ║")
+        print(f"╚══════════════════════════════════════════════╝{Style.RESET_ALL}")
         
-        print("\n2. Transfer Mode Configuration:")
-        print("  set-mode <mode> - Change transfer mode")
-        print("    Available modes: normal, token-bucket, aimd, qos, parallel, multicast")
-        print("    Example: set-mode token-bucket")
+        commands = [
+            ("status", "Show this status information"),
+            ("list-peers", "List all discovered peers"),
+            ("set-mode <mode>", "Set transfer mode (normal|token-bucket|aimd|qos|parallel|multicast)"),
+            ("send <file> <host> <port> [options]", "Send a file to a peer"),
+            ("receive", "Start receiving a file"),
+            ("health-check <host> <port>", "Check if a peer is reachable"),
+            ("reconnect <host> <port>", "Attempt to reconnect to a peer"),
+            ("gossip [on|off|interval]", "Configure gossip protocol settings"),
+            ("congestion [options]", "Configure AIMD congestion control"),
+            ("multicast-receive [port-range]", "Start multicast receiver"),
+            ("exit", "Exit the application")
+        ]
         
-        print("\n3. File Transfer:")
-        print("  send <file> <host> <port> [options] - Send a file")
-        print("    Example: send document.pdf 192.168.1.100 5000")
-        print("  send <file> <host> <port> -dual - Send to two devices with different IPs")
-        print("    Example: send document.pdf 192.168.1.100 5000 -dual")
-        print("  receive - Start receiving files")
-        if "multicast" in self.transfer_modes:
-            print("  multicast-receive [port_range] - Start multicast receiver on multiple ports")
-            print("    Example: multicast-receive 5")
-            print("  mreceive - Shorthand for multicast-receive")
-        
-        print("\n4. Mode-Specific Options:")
-        if self.current_mode == "token-bucket":
-            print("\nToken Bucket Options:")
-            print("  -b <size> - Set bucket size in tokens (default: 1024)")
-            print("  -r <rate> - Set token rate in tokens/sec (default: 100)")
-            print("    Example: send file.txt 192.168.1.100 5000 -b 2048 -r 200")
-        
-        elif self.current_mode == "parallel":
-            print("\nParallel Mode Options:")
-            print("  -t <threads> - Set number of parallel threads (default: 2)")
-            print("    Example: send largefile.iso 192.168.1.100 5000 -t 4")
-        
-        elif self.current_mode == "qos":
-            print("\nQoS Options:")
-            print("  -p <priority> - Set transfer priority (high/normal/low)")
-            print("    Example: send important.pdf 192.168.1.100 5000 -p high")
-        
-        elif self.current_mode == "aimd":
-            print("\nAIMD Congestion Control Options:")
-            print("  -w <size> - Set initial window size in KB (default: 1)")
-            print("    • Low (1-4): Good for unstable networks with high packet loss")
-            print("    • Medium (8-16): Balanced performance for most networks")
-            print("    • High (32-64): Best for reliable, high-bandwidth networks")
-            
-            print("  -min-w <size> - Set minimum window size in KB (default: 1)")
-            print("    • Higher values prevent throughput from dropping too low during congestion")
-            
-            print("  -max-w <size> - Set maximum window size in KB (default: 64)")
-            print("    • Limits bandwidth consumption; useful for shared networks")
-            
-            print("  -no-timeout - Disable timeout-based congestion detection")
-            print("    • Can improve performance on reliable networks with occasional packet reordering")
-            
-            print("  -no-dupack - Disable duplicate ACK-based congestion detection")
-            print("    • Can help when network frequently reorders packets but doesn't drop them")
-            
-            print("  -ack-threshold <count> - Set duplicate ACK threshold (default: 3)")
-            print("    • Higher values (4-5): Less sensitive to reordering, fewer false positives")
-            print("    • Lower values (2): Faster response to actual packet loss")
-            
-            print("\n  Examples for specific scenarios:")
-            print("    • Large file over reliable network:")
-            print("      send large-file.dat 192.168.1.100 5000 -w 32 -min-w 8")
-            print("    • Small file over lossy WiFi:")
-            print("      send small-file.txt 192.168.1.100 5000 -w 4 -max-w 16")
-            print("    • Medium file over network with packet reordering:")
-            print("      send medium-file.pdf 192.168.1.100 5000 -no-timeout -ack-threshold 5")
-        
-        elif self.current_mode == "multicast":
-            print("\nMulticast Mode Options:")
-            print("  -m - Interactive mode to add multiple targets")
-            print("    Example: send file.txt 192.168.1.100 5000 -m")
-            print("  -dual - Send to exactly two targets with different IPs")
-            print("    Example: send file.txt 192.168.1.100 5000 -dual")
-            print("  When using multicast mode, you can send to multiple receivers simultaneously")
-            print("  The first target is specified on the command line, then you can add more interactively")
-        
-        print("\n5. System Commands:")
-        print("  status - Show current status and this help message")
-        print("  gossip [on|off|interval] - Configure gossip-based peer discovery")
-        print("    Example: gossip 10.0 (sets interval to 10 seconds)")
-        print("  congestion - Configure AIMD congestion control parameters")
-        print("    Example: congestion window 8 timeout off (sets window size to 8KB, disables timeout detection)")
-        print("    Example: congestion dupack on threshold 3 (enables triple duplicate ACK detection)")
-        print("  help - Show this help message")
-        print("  quit - Exit the application")
-        
-        print("\nAdditional Information:")
-        print("- All file transfers are encrypted using AES-256")
-        print("- Transfer statistics are saved to JSON files")
-        print("- AIMD congestion control uses both timeout and triple duplicate ACK detection")
-        print("- Use Ctrl+C to cancel ongoing transfers")
-        print("- Type 'help' anytime to see this message")
+        for cmd, desc in commands:
+            print(f"{Fore.GREEN}{cmd}{Style.RESET_ALL}: {desc}")
 
     def start_multicast_receiver(self, port_range=10):
         """Start a multicast receiver that listens on multiple ports"""
@@ -496,6 +444,57 @@ class FileTransferCLI:
         except Exception as e:
             print(f"{Fore.RED}Error configuring AIMD: {str(e)}{Style.RESET_ALL}")
 
+    def _check_peer_health(self, host: str, port: int) -> bool:
+        """Check if a peer is reachable and healthy."""
+        try:
+            # Create a temporary socket for health check
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+                s.settimeout(3.0)  # Short timeout for health check
+                
+                # Send health check message
+                message = {
+                    'type': 'health_check',
+                    'source': {'host': self.host, 'port': self.port},
+                    'timestamp': time.time()
+                }
+                s.sendto(json.dumps(message).encode(), (host, port))
+                
+                # Wait for response
+                try:
+                    data, _ = s.recvfrom(65535)
+                    response = json.loads(data.decode())
+                    
+                    if response.get('type') == 'health_check_ack':
+                        # Update peer in our list
+                        with self.peer_discovery.lock:
+                            peer_id = f"{host}:{port}"
+                            if peer_id in self.peer_discovery.peers:
+                                self.peer_discovery.peers[peer_id].status = 'active'
+                                self.peer_discovery.peers[peer_id].last_seen = time.time()
+                                self.peer_discovery.peers[peer_id].failed_attempts = 0
+                            else:
+                                # Add peer if not in our list
+                                self.peer_discovery._update_peer(host, port)
+                        return True
+                    return False
+                except socket.timeout:
+                    return False
+        except Exception as e:
+            print(f"{Fore.RED}Error checking peer health: {e}{Style.RESET_ALL}")
+            return False
+
+    # Add a new command to force health check on specific peer
+    def health_check_peer(self, host: str, port: int):
+        """Perform a health check on a specific peer."""
+        print(f"Performing health check on {host}:{port}...")
+        
+        if self._check_peer_health(host, port):
+            print(f"{Fore.GREEN}Peer {host}:{port} is healthy and responding.{Style.RESET_ALL}")
+            return True
+        else:
+            print(f"{Fore.RED}Peer {host}:{port} is not responding.{Style.RESET_ALL}")
+            return False
+
 def main():
     init()
     # Setup command history
@@ -587,6 +586,36 @@ def main():
                         print(f"{Fore.RED}Usage: set-mode <mode>{Style.RESET_ALL}")
                         continue
                     cli.set_mode(command[1])
+                
+                elif cmd == "health-check":
+                    if len(command) != 3:
+                        print(f"{Fore.RED}Usage: health-check <host> <port>{Style.RESET_ALL}")
+                        continue
+                    try:
+                        port = int(command[2])
+                        cli.health_check_peer(command[1], port)
+                    except ValueError:
+                        print(f"{Fore.RED}Invalid port number{Style.RESET_ALL}")
+                
+                elif cmd == "reconnect":
+                    if len(command) != 3:
+                        print(f"{Fore.RED}Usage: reconnect <host> <port>{Style.RESET_ALL}")
+                        continue
+                    try:
+                        port = int(command[2])
+                        success = cli.health_check_peer(command[1], port)
+                        if success:
+                            peer_id = f"{command[1]}:{port}"
+                            with cli.peer_discovery.lock:
+                                if peer_id in cli.peer_discovery.peers:
+                                    print(f"{Fore.GREEN}Successfully reconnected to {command[1]}:{port}{Style.RESET_ALL}")
+                                else:
+                                    print(f"{Fore.YELLOW}Peer {command[1]}:{port} responded but is not in the peer list. Adding...{Style.RESET_ALL}")
+                                    cli.peer_discovery._update_peer(command[1], port)
+                        else:
+                            print(f"{Fore.RED}Failed to reconnect to {command[1]}:{port}{Style.RESET_ALL}")
+                    except ValueError:
+                        print(f"{Fore.RED}Invalid port number{Style.RESET_ALL}")
                 
                 elif cmd == "gossip":
                     # Handle gossip command
