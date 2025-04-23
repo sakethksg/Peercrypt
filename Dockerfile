@@ -1,6 +1,6 @@
 FROM python:3.9-slim
 
-LABEL maintainer="Your Name <your.email@example.com>"
+LABEL maintainer="PeerCrypt Team <info@peercrypt.org>"
 LABEL description="PeerCrypt - Secure Decentralized File Transfer"
 
 # Set working directory
@@ -28,6 +28,9 @@ RUN mkdir -p /app/data
 RUN useradd -m -r -u 1000 peercrypt
 RUN chown -R peercrypt:peercrypt /app
 
+# Make entrypoint script executable
+RUN chmod +x docker-entrypoint.py
+
 # Set user
 USER peercrypt
 
@@ -37,9 +40,10 @@ EXPOSE 5000-5010
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONPATH=/app
 
 # Set entrypoint
-ENTRYPOINT ["python"]
+ENTRYPOINT ["/app/docker-entrypoint.py"]
 
-# Set default command
+# Set default command (will be passed to the entrypoint script)
 CMD ["src/cli.py", "--host", "0.0.0.0"] 

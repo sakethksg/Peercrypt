@@ -10,8 +10,28 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ./data:/app/data
+      - ./data:/app/data  # Persist transferred files and logs
     environment:
-      - GOSSIP_INTERVAL=5.0
-      - DEFAULT_MODE=aimd
-    command: src/cli.py --host 0.0.0.0 --port 5000 --gossip-interval ${GOSSIP_INTERVAL} --mode ${DEFAULT_MODE} 
+      # Transfer mode configuration
+      - DEFAULT_MODE=aimd  # Options: normal, token-bucket, aimd, qos, parallel, multicast
+      
+      # Network discovery configuration
+      - GOSSIP_INTERVAL=5.0  # Interval in seconds for peer discovery
+      
+      # Uncomment to disable gossip-based peer discovery on startup
+      # - DISABLE_GOSSIP=true
+      
+      # Advanced AIMD congestion control (for aimd mode)
+      # - AIMD_WINDOW=32  # Initial window size in KB
+      # - AIMD_MIN_WINDOW=8  # Minimum window size in KB
+      # - AIMD_MAX_WINDOW=128  # Maximum window size in KB
+      
+      # Parallel mode configuration
+      # - PARALLEL_THREADS=4  # Number of threads for parallel transfers
+    ports:
+      - "5000-5010:5000-5010"  # Map port range for transfers
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3" 

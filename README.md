@@ -6,7 +6,7 @@ A decentralized file transfer application with strong encryption, advanced conge
 
 ![PeerCrypt Logo](https://img.shields.io/badge/PeerCrypt-Secure%20File%20Transfer-blue?style=for-the-badge)
 
-[![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Active-success.svg)](https://github.com)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://www.docker.com/)
@@ -21,9 +21,15 @@ A decentralized file transfer application with strong encryption, advanced conge
 - [Installation](#-installation)
   - [Standard Installation](#standard-installation)
   - [Docker Installation](#docker-installation)
+  - [Docker Compose Installation](#docker-compose)
 - [Testing](#-testing)
 - [Usage](#-usage)
+  - [Command-Line Options](#command-line-options)
+  - [Interactive Commands](#interactive-commands)
 - [Configuration](#-configuration)
+  - [Environment Variables](#environment-variables)
+  - [Gossip Network Configuration](#gossip-network-configuration)
+  - [AIMD Congestion Control](#aimd-congestion-control-configuration)
 - [Recommendations](#-recommendations)
 - [Development](#-development)
 - [Contributing](#-contributing)
@@ -150,6 +156,16 @@ cd peercrypt
 pip install -r requirements.txt
 ```
 
+The project requires Python 3.9+ and the following dependencies:
+- cryptography >= 41.0.0
+- matplotlib >= 3.7.0
+- numpy >= 1.24.0
+- pandas >= 2.0.0
+- pycryptodome >= 3.19.0
+- colorama >= 0.4.6
+- pyreadline3 >= 3.4.1
+- tqdm >= 4.45.0
+
 ### Docker Installation
 
 1. Build the Docker image:
@@ -182,7 +198,56 @@ docker-compose logs -f
 docker-compose down
 ```
 
-You can customize environment variables in the docker-compose.yml file to change the default settings.
+You can customize environment variables in the docker-compose.yml file to change the default settings:
+
+```yaml
+environment:
+  # Transfer mode configuration
+  - DEFAULT_MODE=aimd  # Options: normal, token-bucket, aimd, qos, parallel, multicast
+  
+  # Network discovery configuration
+  - GOSSIP_INTERVAL=5.0  # Interval in seconds for peer discovery
+  
+  # Uncomment to disable gossip-based peer discovery on startup
+  # - DISABLE_GOSSIP=true
+  
+  # Advanced AIMD congestion control (for aimd mode)
+  # - AIMD_WINDOW=32  # Initial window size in KB
+  # - AIMD_MIN_WINDOW=8  # Minimum window size in KB
+  # - AIMD_MAX_WINDOW=128  # Maximum window size in KB
+  
+  # Parallel mode configuration
+  # - PARALLEL_THREADS=4  # Number of threads for parallel transfers
+```
+
+For easier configuration, you can use the provided script to generate a `.env` file:
+
+```bash
+# Run the interactive setup script
+./create_env.sh
+
+# Or create/edit .env manually with these settings:
+cat > .env << EOF
+# PeerCrypt Environment Variables
+
+# Transfer mode configuration
+DEFAULT_MODE=aimd
+
+# Network discovery configuration
+GOSSIP_INTERVAL=5.0
+
+# Uncomment to disable gossip-based peer discovery
+# DISABLE_GOSSIP=true
+
+# AIMD congestion control settings
+AIMD_WINDOW=32
+AIMD_MIN_WINDOW=8
+AIMD_MAX_WINDOW=128
+
+# Parallel mode settings
+PARALLEL_THREADS=4
+EOF
+```
 
 ## 🧪 Testing
 
@@ -229,147 +294,152 @@ Tests are designed to use dynamic port allocation to avoid conflicts and include
 
 ## 🖥️ Usage
 
-### Running the Application
+### Command-Line Options
 
-<div align="center">
-  <img src="https://user-images.githubusercontent.com/74038190/235224431-e8c8c12e-6826-47f1-89fb-2ddad83b3abf.gif" width="300">
-</div>
+Start the CLI interface with various configuration options:
 
-Start the CLI interface:
 ```bash
-python src/cli.py
+python src/cli.py [OPTIONS]
 ```
 
-Or with Docker:
+Available options:
+```
+--host HOST                 Host to bind to (default: localhost)
+--bootstrap-host HOST       Bootstrap peer host
+--bootstrap-port PORT       Bootstrap peer port
+--mode MODE                 Initial transfer mode (choices: normal, token-bucket, aimd, qos, parallel, multicast)
+--gossip-interval INTERVAL  Interval in seconds for gossip-based peer discovery (default: 5.0)
+--no-gossip                 Disable gossip-based peer discovery on startup
+```
+
+Using Docker:
 ```bash
-docker run -it --network host peercrypt python src/cli.py
+docker run -it --network host peercrypt python src/cli.py --host 0.0.0.0 --mode aimd
 ```
 
-### Command-Line Arguments
+### Interactive Commands
+
+Once the CLI is running, you can use the following commands:
+
+- `help` - Show available commands and current status
+- `status` - Display current mode and configuration
+- `list-peers` - Show discovered peers in the network
+- `set-mode <mode>` - Change the current transfer mode
+- `send <file> <host> <port>` - Send a file to a specific host
+- `receive` - Start receiving a file
+- `multicast-receive` or `mreceive` - Start multicast receiver
+- `join <host> <port>` - Join an existing network through a peer
+- `disconnect` - Leave the network but keep running
+- `quit` or `exit` - Exit the application
+
+#### Send File Options
+
+When sending files, you can specify mode-specific options:
+
+For Parallel Mode:
+```
+send file.txt host port -t 4  # Use 4 threads
+```
+
+For Token Bucket Mode:
+```
+send file.txt host port -b 1024 -r 512  # Bucket size 1024, rate 512 bytes/sec
+```
+
+For QoS Mode:
+```
+send file.txt host port -p high  # Priority: normal, high, highest
+```
+
+For AIMD Mode:
+```
+send file.txt host port -w 32 -min-w 8 -max-w 128  # Window sizes in KB
+send file.txt host port -no-timeout  # Disable timeout detection
+send file.txt host port -no-dupack  # Disable duplicate ACK detection
+```
+
+For Multicast Mode:
+```
+send file.txt host port -m  # Will prompt for additional targets
+```
+
+## 🛠️ Configuration
+
+### Environment Variables
+
+When using Docker or Docker Compose, you can configure PeerCrypt using environment variables:
+
+| Variable | Description | Default | Example |
+|----------|-------------|---------|---------|
+| DEFAULT_MODE | Initial transfer mode | normal | aimd |
+| GOSSIP_INTERVAL | Interval for peer discovery in seconds | 5.0 | 10.0 |
+| DISABLE_GOSSIP | Disable peer discovery on startup | false | true |
+| AIMD_WINDOW | Initial congestion window size in KB | 16 | 32 |
+| AIMD_MIN_WINDOW | Minimum congestion window size in KB | 4 | 8 |
+| AIMD_MAX_WINDOW | Maximum congestion window size in KB | 64 | 128 |
+| PARALLEL_THREADS | Default threads for parallel mode | 4 | 8 |
+
+### Gossip Network Configuration
+
+Configure the peer discovery mechanism:
+
+```
+gossip on                   # Enable gossip-based peer discovery
+gossip off                  # Disable gossip-based peer discovery
+gossip interval 10          # Set the gossip interval to 10 seconds
+```
+
+### AIMD Congestion Control Configuration
+
+Configure congestion control parameters for AIMD mode:
+
+```
+congestion window 32        # Set initial window size to 32 KB
+congestion min-window 8     # Set minimum window size to 8 KB
+congestion max-window 128   # Set maximum window size to 128 KB
+congestion timeout on/off   # Enable/disable timeout-based detection
+congestion dupack on/off    # Enable/disable duplicate ACK detection
+```
+
+## 🚨 Recommendations
+
+For optimal performance in different network conditions:
+
+- **Stable, high-bandwidth networks**: Use Parallel mode with 4-8 threads
+- **Unstable or congested networks**: Use AIMD mode
+- **Background transfers**: Use Token Bucket mode with appropriate rate limits
+- **Multiple priority transfers**: Use QoS mode
+- **Distribution to multiple receivers**: Use Multicast mode
+
+## 🔧 Development
+
+### Adding a New Transfer Mode
+
+1. Create a new file in `src/transfer_modes/` following the existing structure
+2. Implement the required methods
+3. Register the mode in `cli.py`
+
+### Debugging
+
+Enable verbose logging for debugging:
+
 ```bash
-python src/cli.py --host localhost --port 5000 --mode aimd --gossip-interval 5.0
+python src/cli.py --debug
 ```
 
-<details>
-<summary><b>Available Arguments</b></summary>
-<ul>
-  <li><code>--host</code>: Host address to bind to (default: localhost)</li>
-  <li><code>--bootstrap-host</code>, <code>--bootstrap-port</code>: Connect to existing peer</li>
-  <li><code>--mode</code>: Set initial transfer mode</li>
-  <li><code>--gossip-interval</code>: Set peer discovery interval</li>
-  <li><code>--no-gossip</code>: Disable gossip-based peer discovery</li>
-</ul>
-</details>
-
-<details>
-<summary><b>CLI Commands</b></summary>
-
-#### Network Management
-```
-> join 192.168.1.100 5000         # Join network via bootstrap peer
-> list-peers                       # List active peers
-> gossip on                        # Enable gossip protocol
-> gossip off                       # Disable gossip protocol
-> gossip 10.0                      # Set gossip interval to 10 seconds
-```
-
-#### Transfer Mode Configuration
-```
-> set-mode normal                  # Set transfer mode to normal
-> set-mode token-bucket            # Set rate-limited mode
-> set-mode aimd                    # Set congestion control mode
-> set-mode qos                     # Set quality of service mode
-> set-mode parallel                # Set multi-threaded mode
-> set-mode multicast               # Set multicast mode
-```
-
-#### File Transfers
-```
-> send file.txt 192.168.1.100 5000                     # Basic send
-> send large-file.dat 192.168.1.100 5000 -w 16         # Send with 16KB window
-> send video.mp4 192.168.1.100 5000 -p high            # Send with high priority
-> send doc.pdf 192.168.1.100 5000 -t 4                 # Send with 4 threads
-> send image.jpg 192.168.1.100 5000 -dual              # Send to two targets
-> receive                                              # Receive a file
-```
-</details>
-
-### Running Tests
-
-Run all transfer tests:
-```bash
-python src/run_transfer_tests.py --mode all
-```
-
-<details>
-<summary><b>Test Specific Modes</b></summary>
-<p>
-```bash
-python src/run_transfer_tests.py --mode normal
-python src/run_transfer_tests.py --mode aimd
-python src/run_transfer_tests.py --mode aimd-congestion
-python src/run_transfer_tests.py --mode multicast
-```
-</p>
-</details>
-
-## ⚙️ Configuration
-
-### AIMD Mode Optimization
-
-<div align="center">
-
-| Parameter | Description | Default | Recommended Range |
-|-----------|-------------|---------|------------------|
-| Window Size | Initial congestion window | 1 KB | 1-64 KB |
-| Min Window | Minimum window size | 1 KB | 1-4 KB |
-| Max Window | Maximum window size | 64 KB | 16-128 KB |
-| Timeout | Timeout-based detection | Enabled | Enabled for unreliable networks |
-| DupACK | Triple duplicate ACK detection | Enabled | Enabled for high-bandwidth networks |
-| Threshold | Duplicate ACK threshold | 3 | 2-5 |
-
-</div>
-
-## 💡 Recommendations
-
-### Network-Specific Settings
-
-<div align="center">
-
-| Network Type | Recommended Mode | Window Size | Congestion Settings |
-|--------------|------------------|-------------|---------------------|
-| LAN (1 Gbps) | Parallel | 64 KB | DupACK only, 4 threads |
-| WiFi (stable) | AIMD | 16-32 KB | Both detection mechanisms |
-| WiFi (unstable) | AIMD | 4-8 KB | Both, smaller timeout |
-| Mobile network | Token Bucket | 8 KB | 512 KB/s rate limit |
-| Low bandwidth | Normal | 1-2 KB | Default |
-
-</div>
-
-## 🛠️ Development
-
-- Written in Python 3.7+
-- Uses PyCryptodome for AES-256 encryption
-- Implements RFC 6298 for RTO calculation
-- Modular architecture for easy extension
-
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/74038190/213910845-af37a709-8995-40d6-be59-724526e3c3d7.gif" width="300">
-</p>
-
-## 🤝 Contributing
+## 📝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## 📜 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
