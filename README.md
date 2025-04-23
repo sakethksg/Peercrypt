@@ -2,7 +2,7 @@
 
 # PeerCrypt 🔐
 
-A decentralized file transfer application with strong encryption, advanced congestion control, and multiple transfer modes.
+A decentralized file transfer application with strong encryption, advanced congestion control, multiple transfer modes, and robust peer connections.
 
 ![PeerCrypt Logo](https://img.shields.io/badge/PeerCrypt-Secure%20File%20Transfer-blue?style=for-the-badge)
 
@@ -30,6 +30,7 @@ A decentralized file transfer application with strong encryption, advanced conge
   - [Environment Variables](#environment-variables)
   - [Gossip Network Configuration](#gossip-network-configuration)
   - [AIMD Congestion Control](#aimd-congestion-control-configuration)
+  - [Peer Connection Management](#peer-connection-management)
 - [Recommendations](#-recommendations)
 - [Development](#-development)
 - [Contributing](#-contributing)
@@ -71,6 +72,14 @@ A decentralized file transfer application with strong encryption, advanced conge
       <td align="center">📡</td>
       <td><b>Multicast Support</b>: Send to multiple receivers simultaneously</td>
     </tr>
+    <tr>
+      <td align="center">🔌</td>
+      <td><b>Robust Peer Connections</b>: Automatic health checks and connection recovery</td>
+    </tr>
+    <tr>
+      <td align="center">⭐</td>
+      <td><b>Reliability Scoring</b>: Dynamic peer reliability assessment for smart routing</td>
+    </tr>
   </table>
 </div>
 
@@ -82,7 +91,7 @@ PeerCrypt is built around a modular architecture with the following components:
 src/
 ├── cli.py                    # Command-line interface
 ├── network/
-│   └── peer_discovery.py     # Gossip-based peer discovery
+│   └── peer_discovery.py     # Gossip-based peer discovery with robust connection handling
 ├── transfer_modes/
 │   ├── normal_mode.py        # Basic transfer
 │   ├── token_bucket_mode.py  # Rate-limited transfer
@@ -139,6 +148,28 @@ This mode is ideal for transfers over unstable or congested networks, as it dyna
 <details>
 <summary><b>📡 Multicast Mode</b></summary>
 <p>Send files to multiple receivers simultaneously, perfect for distributing content to a group. This mode efficiently handles one-to-many transfers by establishing individual connections to each target while managing them collectively.</p>
+</details>
+
+## 🔌 Robust Peer Connections
+
+<details>
+<summary><b>🔄 Reliability Scoring</b></summary>
+<p>Each peer in the network is assigned a reliability score (0.0-1.0) that dynamically adjusts based on connection quality. Successful interactions increase reliability, while failures decrease it. This score is used to prioritize connections to the most stable peers.</p>
+</details>
+
+<details>
+<summary><b>🔍 Health Check System</b></summary>
+<p>PeerCrypt implements an automatic health check system that periodically verifies connectivity with peers. When inactive peers are detected, the system attempts to re-establish connections without manual intervention. Before file transfers, destination peers are checked to ensure they're reachable.</p>
+</details>
+
+<details>
+<summary><b>🔁 Retry Mechanism</b></summary>
+<p>All network operations include configurable retry logic with exponential backoff. When a connection fails, the system automatically attempts to reconnect multiple times with increasing timeouts to handle temporary network disruptions gracefully.</p>
+</details>
+
+<details>
+<summary><b>📊 Connection Quality Metrics</b></summary>
+<p>The system tracks round-trip time (RTT) and failure counts for each peer. These metrics help identify network problems and allow the system to adapt to changing network conditions. The CLI provides detailed visibility into connection quality.</p>
 </details>
 
 ## 📥 Installation
@@ -304,33 +335,54 @@ python src/cli.py [OPTIONS]
 
 Available options:
 ```
---host HOST                 Host to bind to (default: localhost)
---bootstrap-host HOST       Bootstrap peer host
---bootstrap-port PORT       Bootstrap peer port
---mode MODE                 Initial transfer mode (choices: normal, token-bucket, aimd, qos, parallel, multicast)
---gossip-interval INTERVAL  Interval in seconds for gossip-based peer discovery (default: 5.0)
---no-gossip                 Disable gossip-based peer discovery on startup
+--host HOST                     Host to bind to (default: localhost)
+--bootstrap-host HOST           Bootstrap peer host
+--bootstrap-port PORT           Bootstrap peer port
+--mode MODE                     Initial transfer mode (choices: normal, token-bucket, aimd, qos, parallel, multicast)
+--gossip-interval INTERVAL      Interval in seconds for gossip-based peer discovery (default: 5.0)
+--no-gossip                     Disable gossip-based peer discovery on startup
+--max-retries N                 Set maximum connection retry attempts (default: 3)
+--timeout SEC                   Set initial connection timeout in seconds (default: 3.0)
+--health-check-interval N       Set interval between health checks in seconds (default: 10.0)
 ```
 
 Using Docker:
 ```bash
-docker run -it --network host peercrypt python src/cli.py --host 0.0.0.0 --mode aimd
+docker run -it --network host peercrypt python src/cli.py --host 0.0.0.0 --mode aimd --max-retries 4 --timeout 5.0
 ```
 
 ### Interactive Commands
 
-Once the CLI is running, you can use the following commands:
+PeerCrypt provides a rich set of interactive commands to control file transfers and network behavior:
 
-- `help` - Show available commands and current status
-- `status` - Display current mode and configuration
-- `list-peers` - Show discovered peers in the network
-- `set-mode <mode>` - Change the current transfer mode
-- `send <file> <host> <port>` - Send a file to a specific host
-- `receive` - Start receiving a file
-- `multicast-receive` or `mreceive` - Start multicast receiver
-- `join <host> <port>` - Join an existing network through a peer
-- `disconnect` - Leave the network but keep running
-- `quit` or `exit` - Exit the application
+#### Basic Commands
+```
+help                            Show available commands and current status
+status                          Show current mode and configuration
+quit or exit                    Exit the application
+```
+
+#### Network and Peer Management
+```
+list-peers                      Show discovered peers and reliability scores
+join <host> <port>              Join an existing network through a peer
+health-check <host> <port>      Check if a peer is reachable
+reconnect <host> <port>         Attempt to reconnect to a problematic peer
+gossip on|off|<interval>        Configure peer discovery (on/off/interval in seconds)
+```
+
+#### Transfer Mode Control
+```
+set-mode <mode>                 Change the current transfer mode (normal|token-bucket|aimd|qos|parallel|multicast)
+congestion <options>            Configure AIMD congestion control parameters
+```
+
+#### File Transfer
+```
+send <file> <host> <port>       Send a file to a specific host
+receive                         Start receiving a file
+multicast-receive [port-range]  Start multicast receiver (also shortened as "mreceive")
+```
 
 #### Send File Options
 
@@ -360,8 +412,17 @@ send file.txt host port -no-dupack  # Disable duplicate ACK detection
 
 For Multicast Mode:
 ```
-send file.txt host port -m  # Will prompt for additional targets
+send file.txt host port -m              # Will prompt for additional targets
+send file.txt host port -dual           # Send to exactly two targets
 ```
+
+#### Connection Verification
+
+Before sending files, PeerCrypt automatically performs a health check on target peers:
+- Displays warning if peers are unreachable
+- Offers option to proceed or abort transfer
+- For multicast, shows which targets are unreachable
+- Updates reliability scores based on successful or failed transfers
 
 ## 🛠️ Configuration
 
@@ -378,6 +439,9 @@ When using Docker or Docker Compose, you can configure PeerCrypt using environme
 | AIMD_MIN_WINDOW | Minimum congestion window size in KB | 4 | 8 |
 | AIMD_MAX_WINDOW | Maximum congestion window size in KB | 64 | 128 |
 | PARALLEL_THREADS | Default threads for parallel mode | 4 | 8 |
+| MAX_RETRIES | Maximum connection retry attempts | 3 | 5 |
+| CONNECTION_TIMEOUT | Initial connection timeout in seconds | 3.0 | 5.0 |
+| HEALTH_CHECK_INTERVAL | Interval between health checks in seconds | 10.0 | 20.0 |
 
 ### Gossip Network Configuration
 
@@ -400,6 +464,45 @@ congestion max-window 128   # Set maximum window size to 128 KB
 congestion timeout on/off   # Enable/disable timeout-based detection
 congestion dupack on/off    # Enable/disable duplicate ACK detection
 ```
+
+### Peer Connection Management
+
+The robust peer connection system can be configured through both command-line arguments and runtime commands:
+
+#### Command-line Arguments:
+
+```bash
+--max-retries N            Set maximum connection retry attempts (default: 3)
+--timeout SEC              Set initial connection timeout in seconds (default: 3.0)
+--health-check-interval N  Set interval between health checks in seconds (default: 10.0)
+```
+
+#### Runtime Commands:
+
+```
+health-check <host> <port>  Manually check if a peer is reachable
+reconnect <host> <port>     Attempt to reconnect to a problematic peer
+list-peers                  Show all peers with reliability scores
+```
+
+#### Configuration Best Practices:
+
+1. For **stable networks**, you can reduce overhead:
+   ```bash
+   --max-retries 2 --timeout 2.0 --health-check-interval 30.0
+   ```
+
+2. For **unstable or high-latency networks**, increase resilience:
+   ```bash
+   --max-retries 5 --timeout 5.0 --health-check-interval 15.0
+   ```
+
+3. For **mobile or frequently changing networks**, optimize for discovery:
+   ```bash
+   --max-retries 3 --timeout 4.0 --health-check-interval 8.0
+   ```
+
+The peer connection system will automatically adapt to network conditions, but these settings provide a starting point for optimization.
 
 ## 🚨 Recommendations
 
