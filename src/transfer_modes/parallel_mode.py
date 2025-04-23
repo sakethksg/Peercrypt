@@ -3,7 +3,7 @@ import os
 import time
 import threading
 from typing import Tuple, Optional
-from utils.encryption import encrypt_data, decrypt_data
+from src.utils.encryption import encrypt_data, decrypt_data
 from tqdm import tqdm
 
 class ParallelMode:

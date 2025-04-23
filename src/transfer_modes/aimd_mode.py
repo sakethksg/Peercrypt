@@ -5,7 +5,6 @@ import threading
 import numpy as np
 from typing import Tuple, Optional, List, Dict
 from tqdm import tqdm
-from utils.encryption import encrypt_data, decrypt_data
 
 class AIMDMode:
     def __init__(self, host: str, port: int, initial_window: int = 1024):
@@ -261,14 +260,11 @@ class AIMDMode:
                                 # Prepare packet with sequence number
                                 seq_header = str(self.next_seq).encode() + b':'
                                 
-                                # Encrypt the data
-                                encrypted_data = encrypt_data(data)
+                                # Send the length of data first
+                                s.send(len(data).to_bytes(4, 'big'))
                                 
-                                # Send the length of encrypted data first
-                                s.send(len(encrypted_data).to_bytes(4, 'big'))
-                                
-                                # Then send sequence header and encrypted data
-                                s.send(seq_header + encrypted_data)
+                                # Then send sequence header and data
+                                s.send(seq_header + data)
                                 
                                 # Record send time for this sequence
                                 self.sequence_to_time[self.next_seq] = time.time()
@@ -286,8 +282,9 @@ class AIMDMode:
                 # Wait for all ACKs to be received (go back to blocking mode)
                 s.setblocking(True)
                 
-                # Send end of transmission marker
-                s.send(b"EOT")
+                # Send end of transmission marker with proper formatting
+                s.send(len(b"EOT").to_bytes(4, 'big'))  # Send length first
+                s.send(b"EOT")                          # Then send EOT marker
                 
                 transfer_time = time.time() - self.start_time
                 speed = file_size / transfer_time / 1024 if transfer_time > 0 else 0
@@ -343,14 +340,14 @@ class AIMDMode:
                     with open(f"received_{filename}", 'wb') as f:
                         with tqdm(total=file_size, unit='B', unit_scale=True, desc=f"Receiving {filename}") as pbar:
                             while bytes_received < file_size:
-                                # First receive the length of the encrypted data
+                                # First receive the length of the data
                                 length_bytes = conn.recv(4)
                                 if not length_bytes:
                                     break
                                     
                                 length = int.from_bytes(length_bytes, 'big')
                                 
-                                # Then receive the encrypted data with sequence
+                                # Then receive the data with sequence
                                 packet = b''
                                 while len(packet) < length:
                                     chunk = conn.recv(min(length - len(packet), self.chunk_size))
@@ -364,6 +361,7 @@ class AIMDMode:
                                 
                                 # Check for EOT marker
                                 if packet == b"EOT":
+                                    print("End of transmission marker received")
                                     break
                                 
                                 # Parse sequence number
@@ -372,10 +370,7 @@ class AIMDMode:
                                     seq_str = packet[:colon_pos].decode()
                                     try:
                                         seq = int(seq_str)
-                                        encrypted_data = packet[colon_pos+1:]
-                                        
-                                        # Decrypt the data
-                                        data = decrypt_data(encrypted_data)
+                                        data = packet[colon_pos+1:]
                                         
                                         if seq == expected_seq:
                                             # In-order packet

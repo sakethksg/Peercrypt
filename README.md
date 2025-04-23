@@ -21,6 +21,7 @@ A decentralized file transfer application with strong encryption, advanced conge
 - [Installation](#-installation)
   - [Standard Installation](#standard-installation)
   - [Docker Installation](#docker-installation)
+- [Testing](#-testing)
 - [Usage](#-usage)
 - [Configuration](#-configuration)
 - [Recommendations](#-recommendations)
@@ -74,8 +75,6 @@ PeerCrypt is built around a modular architecture with the following components:
 ```
 src/
 ├── cli.py                    # Command-line interface
-├── run_transfer_tests.py     # Test runner
-├── test_transfer_modes.py    # Test suite
 ├── network/
 │   └── peer_discovery.py     # Gossip-based peer discovery
 ├── transfer_modes/
@@ -93,12 +92,12 @@ src/
 
 <details>
 <summary><b>🔄 Normal Mode</b></summary>
-<p>Basic file transfer with encryption for standard use cases.</p>
+<p>Basic file transfer with encryption for standard use cases. This is the simplest and most reliable mode, suitable for most everyday transfers in stable network conditions.</p>
 </details>
 
 <details>
 <summary><b>🪣 Token Bucket Mode</b></summary>
-<p>Rate-limited transfers to ensure consistent bandwidth usage and prevent network flooding.</p>
+<p>Rate-limited transfers to ensure consistent bandwidth usage and prevent network flooding. The token bucket algorithm allows for controlled bursts while maintaining an average rate limit, making it ideal for background transfers that shouldn't interfere with other network traffic.</p>
 </details>
 
 <details>
@@ -116,22 +115,24 @@ Congestion Window Management:
   <li><b>Additive Increase</b>: Window grows by 1KB for each successful transmission</li>
   <li><b>Multiplicative Decrease</b>: Window halves when congestion is detected</li>
 </ul>
+
+This mode is ideal for transfers over unstable or congested networks, as it dynamically adjusts to available bandwidth.
 </p>
 </details>
 
 <details>
 <summary><b>🚦 QoS Mode</b></summary>
-<p>Priority-based transfers with three levels: high, normal, and low.</p>
+<p>Priority-based transfers with three levels: normal (1), high (2), and highest (3). This mode ensures that important files get transferred with higher priority when multiple transfers are occurring simultaneously. The QoS manager allocates bandwidth proportionally based on priority levels.</p>
 </details>
 
 <details>
 <summary><b>⚡ Parallel Mode</b></summary>
-<p>Multi-threaded transfers to maximize throughput on high-bandwidth networks.</p>
+<p>Multi-threaded transfers to maximize throughput on high-bandwidth networks. This mode splits files into chunks and transfers them concurrently, which can significantly increase performance especially on high-latency connections. The number of threads is configurable (default: 4).</p>
 </details>
 
 <details>
 <summary><b>📡 Multicast Mode</b></summary>
-<p>Send files to multiple receivers simultaneously, perfect for distributing content to a group.</p>
+<p>Send files to multiple receivers simultaneously, perfect for distributing content to a group. This mode efficiently handles one-to-many transfers by establishing individual connections to each target while managing them collectively.</p>
 </details>
 
 ## 📥 Installation
@@ -182,6 +183,49 @@ docker-compose down
 ```
 
 You can customize environment variables in the docker-compose.yml file to change the default settings.
+
+## 🧪 Testing
+
+PeerCrypt includes comprehensive testing for all transfer modes to ensure reliability and performance.
+
+### Running Tests
+
+Run all transfer mode tests:
+```bash
+python test_all_modes.py
+```
+
+Test a specific transfer mode:
+```bash
+python run_mode_test.py <mode>
+```
+
+Available modes: `normal`, `token-bucket`, `aimd`, `qos`, `parallel`, `multicast`, `all`
+
+Example to test just the AIMD mode:
+```bash
+python run_mode_test.py aimd
+```
+
+These tests verify every transfer mode with various file sizes and configurations to ensure correct operation.
+
+<details>
+<summary><b>Test Details</b></summary>
+<p>
+The test suite performs the following for each mode:
+
+- Tests with multiple file sizes (1KB, 10KB, and 100KB)
+- Verifies successful transfers through file integrity checks
+- Tests special features of each mode:
+  - Token Bucket: Tests rate limiting with different bucket sizes
+  - AIMD: Tests adaptive window sizing and congestion response
+  - QoS: Tests different priority levels
+  - Parallel: Tests different thread counts (2 and 4)
+  - Multicast: Tests sending to multiple targets
+
+Tests are designed to use dynamic port allocation to avoid conflicts and include proper cleanup between tests.
+</p>
+</details>
 
 ## 🖥️ Usage
 
