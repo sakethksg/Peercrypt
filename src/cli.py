@@ -11,12 +11,12 @@ try:
 except ImportError:
     import pyreadline3 as readline  # For Windows
 from transfer_modes.normal_mode import NormalMode
-from src.transfer_modes.token_bucket_mode import TokenBucketMode
-from src.transfer_modes.aimd_mode import AIMDMode
-from src.transfer_modes.qos_mode import QoSMode
-from src.transfer_modes.parallel_mode import ParallelMode
-from src.transfer_modes.multicast_mode import MulticastMode
-from src.network.peer_discovery import PeerDiscovery
+from transfer_modes.token_bucket_mode import TokenBucketMode
+from transfer_modes.aimd_mode import AIMDMode
+from transfer_modes.qos_mode import QoSMode
+from transfer_modes.parallel_mode import ParallelMode
+from transfer_modes.multicast_mode import MulticastMode
+from network.peer_discovery import PeerDiscovery
 
 def is_port_available(port: int) -> bool:
     """Check if a port is available."""
