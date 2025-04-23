@@ -2,7 +2,7 @@ import socket
 import os
 import time
 from typing import Tuple, Optional
-from src.utils.encryption import encrypt_data, decrypt_data
+from utils.encryption import encrypt_data, decrypt_data
 from tqdm import tqdm
 
 class NormalMode:

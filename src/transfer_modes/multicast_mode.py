@@ -5,7 +5,7 @@ import threading
 import queue
 from typing import List, Tuple, Dict, Optional, Set
 from tqdm import tqdm
-from src.utils.encryption import encrypt_data, decrypt_data
+from utils.encryption import encrypt_data, decrypt_data
 
 class MulticastMode:
     """

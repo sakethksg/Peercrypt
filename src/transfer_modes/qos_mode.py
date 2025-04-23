@@ -5,7 +5,7 @@ import threading
 from typing import Tuple, Optional, Dict, List
 from dataclasses import dataclass
 from tqdm import tqdm
-from src.utils.encryption import encrypt_data, decrypt_data
+from utils.encryption import encrypt_data, decrypt_data
 
 @dataclass
 class TransferPriority:
