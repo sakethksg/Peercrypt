@@ -28,6 +28,7 @@ A decentralized file transfer application with strong encryption, advanced conge
 - [Usage](#-usage)
   - [Command-Line Options](#command-line-options)
   - [Interactive Commands](#interactive-commands)
+  - [Commands Reference](#commands-reference)
 - [Configuration](#-configuration)
   - [Environment Variables](#environment-variables)
   - [Gossip Network Configuration](#gossip-network-configuration)
@@ -438,6 +439,19 @@ Before sending files, PeerCrypt automatically performs a health check on target 
 - Offers option to proceed or abort transfer
 - For multicast, shows which targets are unreachable
 - Updates reliability scores based on successful or failed transfers
+
+### Commands Reference
+
+For a comprehensive reference of all PeerCrypt commands and their options, see the [commands.md](commands.md) file, which includes:
+
+- Basic commands for general CLI interaction
+- Network and peer management commands
+- File transfer commands with all available options
+- Detailed options for each transfer mode
+- Advanced congestion control configuration
+- Recommended command combinations for different network conditions
+
+This document provides examples and explanations for all commands and serves as the definitive reference for using PeerCrypt effectively.
 
 ## 🛠️ Configuration
 

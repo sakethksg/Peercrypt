@@ -135,7 +135,7 @@ data/
 
 # Transfer stats files
 transfer_stats_*.json
-bandwidth_stats.csv
+bandwidth_stats.csv 
 
 # Test output files
 *_test.txt
