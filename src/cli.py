@@ -19,7 +19,6 @@ from transfer_modes.multicast_mode import MulticastMode
 from network.peer_discovery import PeerDiscovery
 
 def is_port_available(port: int) -> bool:
-    """Check if a port is available."""
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind(('localhost', port))

@@ -9,29 +9,45 @@ import string
 import threading
 import shutil
 import socket
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
+
+# Add the project root and src directory to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(current_dir)
+src_dir = os.path.join(project_root, 'src')
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+if src_dir not in sys.path:
+    sys.path.insert(0, src_dir)
 
 def random_string(length: int) -> str:
     """Generate a random string of fixed length"""
     letters = string.ascii_lowercase + string.ascii_uppercase + string.digits
     return ''.join(random.choice(letters) for _ in range(length))
 
-def get_free_port():
+def get_free_port() -> int:
     """Find a free port on the host"""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(('127.0.0.1', 0))
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         return s.getsockname()[1]
 
 class TestAllModes(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Import here to ensure paths are correct
-        from src.transfer_modes.normal_mode import NormalMode
-        from src.transfer_modes.token_bucket_mode import TokenBucketMode
-        from src.transfer_modes.aimd_mode import AIMDMode
-        from src.transfer_modes.qos_mode import QoSMode
-        from src.transfer_modes.parallel_mode import ParallelMode
-        from src.transfer_modes.multicast_mode import MulticastMode
+        try:
+            from src.transfer_modes.normal_mode import NormalMode
+            from src.transfer_modes.token_bucket_mode import TokenBucketMode
+            from src.transfer_modes.aimd_mode import AIMDMode
+            from src.transfer_modes.qos_mode import QoSMode
+            from src.transfer_modes.parallel_mode import ParallelMode
+            from src.transfer_modes.multicast_mode import MulticastMode
+        except ModuleNotFoundError as e:
+            print(f"Import error: {e}")
+            print("Make sure you're running this from the project root directory")
+            print(f"Current PYTHONPATH: {sys.path}")
+            raise
         
         cls.host = "127.0.0.1"
         cls.test_file_sizes = [1024, 10240, 102400]  # Test with different file sizes: 1KB, 10KB, 100KB
@@ -425,8 +441,14 @@ class TestAllModes(unittest.TestCase):
 def run_tests():
     # Set the PYTHONPATH to include the current directory
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    if current_dir not in sys.path:
-        sys.path.insert(0, current_dir)
+    project_root = os.path.abspath(current_dir)
+    src_dir = os.path.join(project_root, 'src')
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    if src_dir not in sys.path:
+        sys.path.insert(0, src_dir)
+    
+    print(f"Running tests with sys.path = {sys.path}")
     
     # Create test suite
     suite = unittest.TestSuite()
