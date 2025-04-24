@@ -135,4 +135,13 @@ data/
 
 # Transfer stats files
 transfer_stats_*.json
-bandwidth_stats.csv 
+bandwidth_stats.csv
+
+# Test output files
+*_test.txt
+test.txt
+received_test.txt
+myfile.txt
+aimd_congestion_stats.json
+*_stats.json
+*_stats.csv 

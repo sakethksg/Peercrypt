@@ -23,6 +23,8 @@ A decentralized file transfer application with strong encryption, advanced conge
   - [Docker Installation](#docker-installation)
   - [Docker Compose Installation](#docker-compose)
 - [Testing](#-testing)
+  - [Running Tests](#running-tests)
+  - [Test Output Files](#test-output-files)
 - [Usage](#-usage)
   - [Command-Line Options](#command-line-options)
   - [Interactive Commands](#interactive-commands)
@@ -304,6 +306,19 @@ python run_mode_test.py aimd
 ```
 
 These tests verify every transfer mode with various file sizes and configurations to ensure correct operation.
+
+### Test Output Files
+
+Tests generate temporary files and statistics that are excluded from version control:
+
+- `*_test.txt`: Test input/output files for verification
+- `received_test.txt`: Files received during testing
+- `test.txt`: Generic test file
+- `myfile.txt`: Another test file
+- `*_stats.json`, `*_stats.csv`: Performance statistics from tests
+- `aimd_congestion_stats.json`: AIMD congestion control statistics
+
+These files are automatically added to `.gitignore` to avoid cluttering the repository with test artifacts.
 
 <details>
 <summary><b>Test Details</b></summary>
