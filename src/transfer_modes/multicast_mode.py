@@ -8,10 +8,7 @@ from tqdm import tqdm
 from utils.encryption import encrypt_data, decrypt_data
 
 class MulticastMode:
-    """
-    Transfer mode that enables sending files to multiple devices simultaneously.
-    Uses separate threads to handle each receiver connection.
-    """
+    
     def __init__(self, host: str, port: int):
         self.host = host
         self.port = port
@@ -25,18 +22,7 @@ class MulticastMode:
         self.error_queue = queue.Queue()  # Queue for error messages
         
     def send_file(self, filepath: str, targets: List[Tuple[str, int]], **kwargs) -> bool:
-        """
-        Send a file to multiple targets simultaneously
-        
-        Args:
-            filepath: Path to the file to send
-            targets: List of (host, port) tuples representing target devices
-            **kwargs: Additional parameters
-                - timeout: Connection timeout in seconds (default: 30)
-        
-        Returns:
-            True if the file was sent to all targets successfully, False otherwise
-        """
+
         if not targets:
             print("Error: No targets specified")
             return False
@@ -159,12 +145,6 @@ class MulticastMode:
                 self.active_receivers.discard((target_host, target_port))
     
     def receive_file(self) -> Tuple[bool, Optional[str]]:
-        """
-        Receive a file from a sender
-        
-        Returns:
-            Tuple of (success_flag, received_filename)
-        """
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -225,12 +205,6 @@ class MulticastMode:
             return False, None
     
     def start_multicast_receiver(self, port_range: int = 10) -> None:
-        """
-        Start multiple receiver threads to listen on a range of ports
-        
-        Args:
-            port_range: Number of consecutive ports to listen on
-        """
         receivers = []
         for port_offset in range(port_range):
             receiver_port = self.base_port + port_offset
@@ -253,9 +227,7 @@ class MulticastMode:
             print("Stopping multicast receiver")
     
     def _receiver_thread(self, port: int) -> None:
-        """
-        Thread function for a single receiver port
-        """
+        #Thread function for a single receiver port
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -318,11 +290,5 @@ class MulticastMode:
             print(f"Fatal error in receiver thread (port {port}): {e}")
             
     def get_active_receivers(self) -> Set[Tuple[str, int]]:
-        """
-        Get the currently active receivers
-        
-        Returns:
-            Set of (host, port) tuples of active receivers
-        """
         with self.status_lock:
             return self.active_receivers.copy() 
