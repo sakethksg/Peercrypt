@@ -1492,40 +1492,7 @@ python src/cli.py --debug
 
 ---
 
-## 📝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📜 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
-<div align="center">
-  <div style="background: linear-gradient(45deg, #1a1e24, #2d333b); padding: 20px; border-radius: 10px; margin: 20px auto; width: 80%; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
-    <h2 style="color: white; margin: 0 0 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">PeerCrypt</h2>
-    <p style="color: #e6edf3; margin: 5px 0;">Secure, Fast, and Reliable P2P File Transfers</p>
-  </div>
-  
-  <img src="https://user-images.githubusercontent.com/74038190/216644497-1951db19-8f3d-4e44-ac08-8e9d7e0d94a7.gif" alt="Thanks" width="400" style="margin: 20px 0;">
-  
-  <p style="font-size: 18px; margin-bottom: 20px;"><strong>Made with ❤️ by Kollipara Sai Govinda Saketh and Team</strong></p>
-  
-  <div style="margin: 20px 0;">
-    <a href="https://github.com/username/peercrypt" style="background-color: #2d333b; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">GitHub</a>
-    <a href="https://github.com/username/peercrypt/issues" style="background-color: #2d333b; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">Report Bug</a>
-    <a href="https://github.com/username/peercrypt/issues" style="background-color: #2d333b; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">Request Feature</a>
-  </div>
-</div>
 
 ## 📊 Experiment Results and Analysis
 
@@ -1703,3 +1670,38 @@ This project demonstrates core computer networking concepts but could be extende
   </tbody>
 </table>
 </div> 
+
+## 📝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📜 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+<div align="center">
+  <div style="background: linear-gradient(45deg, #1a1e24, #2d333b); padding: 20px; border-radius: 10px; margin: 20px auto; width: 80%; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+    <h2 style="color: white; margin: 0 0 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">PeerCrypt</h2>
+    <p style="color: #e6edf3; margin: 5px 0;">Secure, Fast, and Reliable P2P File Transfers</p>
+  </div>
+  
+  
+  
+  <p style="font-size: 18px; margin-bottom: 20px;"><strong>Made with by Kollipara Sai Govinda Saketh and Team </strong></p>
+  
+  <div style="margin: 20px 0;">
+    <a href="https://github.com/username/peercrypt" style="background-color: #2d333b; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">GitHub</a>
+    <a href="https://github.com/username/peercrypt/issues" style="background-color: #2d333b; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">Report Bug</a>
+    <a href="https://github.com/username/peercrypt/issues" style="background-color: #2d333b; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">Request Feature</a>
+  </div>
+</div>
