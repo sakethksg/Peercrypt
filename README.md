@@ -121,7 +121,7 @@ This project applies theoretical networking concepts to practical challenges in 
 
 <div class="tech-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
 
-<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2d333b; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2b3a4d; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">Core Technologies</h3>
   <ul>
     <li><strong>Python 3.9+</strong>: Primary implementation language</li>
@@ -131,7 +131,7 @@ This project applies theoretical networking concepts to practical challenges in 
   </ul>
 </div>
 
-<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2d333b; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2b3a4d; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">Python Libraries</h3>
   <ul>
     <li><strong>PyCryptodome</strong>: Advanced cryptographic library for encryption</li>
@@ -142,7 +142,7 @@ This project applies theoretical networking concepts to practical challenges in 
   </ul>
 </div>
 
-<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2d333b; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2b3a4d; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">Library Versions</h3>
   <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
     <div>
@@ -166,7 +166,7 @@ This project applies theoretical networking concepts to practical challenges in 
   </div>
 </div>
 
-<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2d333b; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2b3a4d; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">Security Features</h3>
   <ul>
     <li><strong>AES-256-CBC</strong>: For file encryption with 256-bit keys</li>
@@ -176,7 +176,7 @@ This project applies theoretical networking concepts to practical challenges in 
   </ul>
 </div>
 
-<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2d333b; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2b3a4d; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">Network Protocols</h3>
   <ul>
     <li><strong>Gossip Protocol</strong>: For decentralized peer discovery</li>
@@ -185,7 +185,7 @@ This project applies theoretical networking concepts to practical challenges in 
   </ul>
 </div>
 
-<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2d333b; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="tech-section" style="border-radius: 10px; padding: 15px; background-color: #2b3a4d; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">Performance Optimization</h3>
   <ul>
     <li><strong>AIMD Algorithm</strong>: Additive Increase Multiplicative Decrease for congestion control</li>
@@ -265,37 +265,37 @@ PeerCrypt offers specialized transfer modes optimized for different network scen
 
 <div class="mode-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
 
-<div class="mode-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="mode-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">🔄 Normal Mode</h3>
   <p>Basic file transfer with encryption for standard use cases. Most reliable for stable networks.</p>
   <p><strong>Best for:</strong> Everyday transfers in stable network conditions</p>
 </div>
 
-<div class="mode-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="mode-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">🪣 Token Bucket Mode</h3>
   <p>Rate-limited transfers to ensure consistent bandwidth usage and prevent network flooding.</p>
   <p><strong>Best for:</strong> Background transfers that shouldn't interfere with other traffic</p>
 </div>
 
-<div class="mode-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="mode-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">📈 AIMD Mode</h3>
   <p>Implements TCP-like congestion control with Additive Increase Multiplicative Decrease.</p>
   <p><strong>Best for:</strong> Transfers over unstable or congested networks</p>
 </div>
 
-<div class="mode-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="mode-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">🚦 QoS Mode</h3>
   <p>Priority-based transfers with three levels: normal, high, and highest.</p>
   <p><strong>Best for:</strong> Managing multiple transfers with different importance levels</p>
 </div>
 
-<div class="mode-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="mode-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">⚡ Parallel Mode</h3>
   <p>Multi-threaded transfers to maximize throughput on high-bandwidth networks.</p>
   <p><strong>Best for:</strong> High-speed transfers on reliable networks</p>
 </div>
 
-<div class="mode-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="mode-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h3 style="color: #58a6ff;">📡 Multicast Mode</h3>
   <p>Send files to multiple receivers simultaneously.</p>
   <p><strong>Best for:</strong> Distribution to multiple targets efficiently</p>
@@ -338,19 +338,19 @@ Send files to multiple receivers simultaneously, perfect for distributing conten
 PeerCrypt implements sophisticated mechanisms to maintain reliable peer connections:
 
 <div class="grid-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-  <div class="grid-item" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+  <div class="grid-item" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
     <h3 style="color: #58a6ff;">🔄 Reliability Scoring</h3>
     <p>Each peer is assigned a dynamic reliability score (0.0-1.0) based on connection quality, used to prioritize stable peers.</p>
   </div>
-  <div class="grid-item" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+  <div class="grid-item" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
     <h3 style="color: #58a6ff;">🔍 Health Check System</h3>
     <p>Automatic verification of peer connectivity with re-establishment of connections to inactive peers.</p>
   </div>
-  <div class="grid-item" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+  <div class="grid-item" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
     <h3 style="color: #58a6ff;">🔁 Retry Mechanism</h3>
     <p>Configurable retry logic with exponential backoff for graceful handling of temporary network disruptions.</p>
   </div>
-  <div class="grid-item" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+  <div class="grid-item" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
     <h3 style="color: #58a6ff;">📊 Connection Quality Metrics</h3>
     <p>Tracking of RTT and failure counts for network problem identification and adaptation.</p>
   </div>
@@ -425,7 +425,7 @@ PeerCrypt implements several advanced computer networking concepts that align wi
 
 PeerCrypt implements several custom network protocols for different aspects of the system. These protocols are formally documented below:
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">1. File Transfer Protocol (FTP)</h4>
   
   <p>PeerCrypt implements a custom application-layer File Transfer Protocol optimized for secure peer-to-peer communication. This protocol is specifically designed to address the security and reliability challenges in decentralized networks.</p>
@@ -640,7 +640,7 @@ PeerCrypt implements several custom network protocols for different aspects of t
   </table>
 </div>
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">2. Gossip Protocol</h4>
   
   <p>Peer discovery uses a gossip protocol with the following message format:</p>
@@ -690,7 +690,7 @@ PeerCrypt implements several custom network protocols for different aspects of t
   </ul>
 </div>
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">3. Control Protocol</h4>
   
   <p>For control messages and metadata exchange:</p>
@@ -730,7 +730,7 @@ PeerCrypt implements several custom network protocols for different aspects of t
   </ul>
 </div>
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Protocol State Machines</h4>
   
   <p>File transfer follows this state machine:</p>
@@ -748,7 +748,7 @@ PeerCrypt implements several custom network protocols for different aspects of t
 
 This section provides formal mathematical descriptions of key algorithms implemented in PeerCrypt.
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">AIMD Congestion Control</h4>
   
   <p>The AIMD algorithm's congestion window (cwnd) evolves according to:</p>
@@ -778,7 +778,7 @@ This section provides formal mathematical descriptions of key algorithms impleme
   </ul>
 </div>
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Token Bucket Algorithm</h4>
   
   <p>The token bucket algorithm operates with parameters:</p>
@@ -809,7 +809,7 @@ This section provides formal mathematical descriptions of key algorithms impleme
   <p>Maximum burst size: b bytes</p>
 </div>
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">RTT Estimation (Jacobson's Algorithm)</h4>
   
   <p>Smooth RTT estimate (SRTT) calculation:</p>
@@ -830,7 +830,7 @@ This section provides formal mathematical descriptions of key algorithms impleme
   </pre>
 </div>
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Reliability Scoring</h4>
   
   <p>The reliability score R for each peer evolves as:</p>
@@ -851,7 +851,7 @@ This section provides formal mathematical descriptions of key algorithms impleme
 
 This project builds upon fundamental research in computer networking, implementing concepts from several key research papers and RFCs:
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Theoretical Foundations</h4>
   
   <ol>
@@ -876,7 +876,7 @@ This project builds upon fundamental research in computer networking, implementi
 
 ## 📊 Related Work Comparison
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Comprehensive Comparative Analysis</h4>
   
   <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
@@ -947,7 +947,7 @@ This project builds upon fundamental research in computer networking, implementi
   </table>
 </div>
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Performance Analysis of Gossip Protocol</h4>
   
   <p>The Gossip Protocol implementation for peer discovery shows excellent scalability characteristics compared to centralized discovery methods:</p>
@@ -981,7 +981,7 @@ This project builds upon fundamental research in computer networking, implementi
   </div>
 </div>
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Security Analysis</h4>
   
   <p>Our AES-256 encryption implementation provides strong security with minimal performance impact:</p>
@@ -1020,7 +1020,7 @@ This project builds upon fundamental research in computer networking, implementi
   </table>
 </div>
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Comparison of Transfer Modes</h4>
   
   <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
@@ -1087,7 +1087,7 @@ This project builds upon fundamental research in computer networking, implementi
   </table>
 </div>
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Comparison with Existing Solutions</h4>
   
   <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
@@ -1286,7 +1286,7 @@ python src/cli.py --host 0.0.0.0 --mode aimd --max-retries 4
 ```
 
 <div align="center">
-  <a href="commands.md" style="background-color: #2d333b; color: #e6edf3; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 20px auto; display: inline-block; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #444c56;">
+  <a href="commands.md" style="background-color: #2b3a4d; color: #e6edf3; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 20px auto; display: inline-block; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #444c56;">
     📖 Complete Commands Reference
   </a>
 </div>
@@ -1344,31 +1344,31 @@ multicast-receive [port-range]  Start multicast receiver
 
 <div class="command-table" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
 
-<div class="command-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="command-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h4 style="color: #58a6ff;">Parallel Mode</h4>
   <code style="background-color: #1a1e24; padding: 8px; border-radius: 5px; display: block; margin: 10px 0; color: #e6edf3;">send file.txt host port -t 4</code>
   <p>Use 4 threads for transfer</p>
 </div>
 
-<div class="command-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="command-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h4 style="color: #58a6ff;">Token Bucket Mode</h4>
   <code style="background-color: #1a1e24; padding: 8px; border-radius: 5px; display: block; margin: 10px 0; color: #e6edf3;">send file.txt host port -b 1024 -r 512</code>
   <p>Bucket size 1024, rate 512 bytes/sec</p>
 </div>
 
-<div class="command-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="command-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h4 style="color: #58a6ff;">QoS Mode</h4>
   <code style="background-color: #1a1e24; padding: 8px; border-radius: 5px; display: block; margin: 10px 0; color: #e6edf3;">send file.txt host port -p high</code>
   <p>Set priority to high (normal/high/highest)</p>
 </div>
 
-<div class="command-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="command-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h4 style="color: #58a6ff;">AIMD Mode</h4>
   <code style="background-color: #1a1e24; padding: 8px; border-radius: 5px; display: block; margin: 10px 0; color: #e6edf3;">send file.txt host port -w 32 -min-w 8 -max-w 128</code>
   <p>Set window sizes in KB</p>
 </div>
 
-<div class="command-card" style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="command-card" style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h4 style="color: #58a6ff;">Multicast Mode</h4>
   <code style="background-color: #1a1e24; padding: 8px; border-radius: 5px; display: block; margin: 10px 0; color: #e6edf3;">send file.txt host port -m</code>
   <p>Prompts for additional targets</p>
@@ -1379,7 +1379,7 @@ multicast-receive [port-range]  Start multicast receiver
 <div align="center" style="margin: 25px 0;">
   <h3>📋 Need more details?</h3>
   <p>For a complete reference of all commands and options, see:</p>
-  <a href="commands.md" style="background-color: #2d333b; color: #e6edf3; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 15px auto; display: inline-block; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #444c56;">
+  <a href="commands.md" style="background-color: #2b3a4d; color: #e6edf3; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 15px auto; display: inline-block; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #444c56;">
     📖 View Full Commands Documentation
   </a>
 </div>
@@ -1407,19 +1407,19 @@ multicast-receive [port-range]  Start multicast receiver
 
 <div class="preset-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
 
-<div class="preset-card" style="flex: 1; min-width: 250px; padding: 15px; border-radius: 5px; background-color: #2d333b; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="preset-card" style="flex: 1; min-width: 250px; padding: 15px; border-radius: 5px; background-color: #2b3a4d; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h4 style="color: #58a6ff;">Stable Networks</h4>
   <pre style="background-color: #1a1e24; padding: 10px; border-radius: 5px; color: #e6edf3;">--max-retries 2 --timeout 2.0 --health-check-interval 30.0</pre>
   <p>Reduced overhead for reliable connections</p>
 </div>
 
-<div class="preset-card" style="flex: 1; min-width: 250px; padding: 15px; border-radius: 5px; background-color: #2d333b; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="preset-card" style="flex: 1; min-width: 250px; padding: 15px; border-radius: 5px; background-color: #2b3a4d; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h4 style="color: #58a6ff;">Unstable Networks</h4>
   <pre style="background-color: #1a1e24; padding: 10px; border-radius: 5px; color: #e6edf3;">--max-retries 5 --timeout 5.0 --health-check-interval 15.0</pre>
   <p>Increased resilience for poor connections</p>
 </div>
 
-<div class="preset-card" style="flex: 1; min-width: 250px; padding: 15px; border-radius: 5px; background-color: #2d333b; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+<div class="preset-card" style="flex: 1; min-width: 250px; padding: 15px; border-radius: 5px; background-color: #2b3a4d; color: #e6edf3; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
   <h4 style="color: #58a6ff;">Mobile Networks</h4>
   <pre style="background-color: #1a1e24; padding: 10px; border-radius: 5px; color: #e6edf3;">--max-retries 3 --timeout 4.0 --health-check-interval 8.0</pre>
   <p>Optimized for frequently changing networks</p>
@@ -1432,9 +1432,9 @@ multicast-receive [port-range]  Start multicast receiver
 ## 🚨 Recommendations
 
 <div align="center" style="margin: 20px 0;">
-<table style="border-collapse: collapse; width: 90%; max-width: 800px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); border-radius: 10px; overflow: hidden; background-color: #2d333b;">
+<table style="border-collapse: collapse; width: 90%; max-width: 800px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); border-radius: 10px; overflow: hidden; background-color: #2b3a4d;">
   <thead>
-    <tr style="background: linear-gradient(45deg, #1a1e24, #2d333b); color: white;">
+    <tr style="background: linear-gradient(45deg, #1a1e24, #2b3a4d); color: white;">
       <th style="padding: 15px; text-align: left; border-bottom: 2px solid #444c56;">Network Condition</th>
       <th style="padding: 15px; text-align: left; border-bottom: 2px solid #444c56;">Recommended Mode</th>
       <th style="padding: 15px; text-align: left; border-bottom: 2px solid #444c56;">Settings</th>
@@ -1497,7 +1497,7 @@ PeerCrypt includes a comprehensive testing framework to demonstrate and validate
 
 ### Performance Comparison
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Transfer Mode Performance (100MB file)</h4>
   
   <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
@@ -1548,7 +1548,7 @@ PeerCrypt includes a comprehensive testing framework to demonstrate and validate
 
 ### AIMD Congestion Response
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Congestion Window Size Over Time</h4>
   <p>The AIMD implementation demonstrates classic sawtooth pattern as the congestion window grows linearly until packet loss is detected, followed by multiplicative decrease:</p>
   
@@ -1584,7 +1584,7 @@ PeerCrypt includes a comprehensive testing framework to demonstrate and validate
 
 This project demonstrates core computer networking concepts but could be extended in several academically interesting directions:
 
-<div style="background-color: #2d333b; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
+<div style="background-color: #2b3a4d; color: #e6edf3; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin: 20px 0;">
   <h4 style="color: #58a6ff;">Potential Research Extensions</h4>
   
   <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
@@ -1630,9 +1630,9 @@ This project demonstrates core computer networking concepts but could be extende
 ## 🚨 Recommendations
 
 <div align="center" style="margin: 20px 0;">
-<table style="border-collapse: collapse; width: 90%; max-width: 800px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); border-radius: 10px; overflow: hidden; background-color: #2d333b;">
+<table style="border-collapse: collapse; width: 90%; max-width: 800px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); border-radius: 10px; overflow: hidden; background-color: #2b3a4d;">
   <thead>
-    <tr style="background: linear-gradient(45deg, #1a1e24, #2d333b); color: white;">
+    <tr style="background: linear-gradient(45deg, #1a1e24, #2b3a4d); color: white;">
       <th style="padding: 15px; text-align: left; border-bottom: 2px solid #444c56;">Network Condition</th>
       <th style="padding: 15px; text-align: left; border-bottom: 2px solid #444c56;">Recommended Mode</th>
       <th style="padding: 15px; text-align: left; border-bottom: 2px solid #444c56;">Settings</th>
@@ -1687,7 +1687,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ---
 
 <div align="center">
-  <div style="background: linear-gradient(45deg, #1a1e24, #2d333b); padding: 20px; border-radius: 10px; margin: 20px auto; width: 80%; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+  <div style="background: linear-gradient(45deg, #1a1e24, #2b3a4d); padding: 20px; border-radius: 10px; margin: 20px auto; width: 80%; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
     <h2 style="color: white; margin: 0 0 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">PeerCrypt</h2>
     <p style="color: #e6edf3; margin: 5px 0;">Secure, Fast, and Reliable P2P File Transfers</p>
   </div>
@@ -1697,8 +1697,8 @@ Distributed under the MIT License. See `LICENSE` for more information.
   <p style="font-size: 18px; margin-bottom: 20px;"><strong>Made with by Kollipara Sai Govinda Saketh and Team </strong></p>
   
   <div style="margin: 20px 0;">
-    <a href="https://github.com/username/peercrypt" style="background-color: #2d333b; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">GitHub</a>
-    <a href="https://github.com/username/peercrypt/issues" style="background-color: #2d333b; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">Report Bug</a>
-    <a href="https://github.com/username/peercrypt/issues" style="background-color: #2d333b; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">Request Feature</a>
+    <a href="https://github.com/username/peercrypt" style="background-color: #2b3a4d; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">GitHub</a>
+    <a href="https://github.com/username/peercrypt/issues" style="background-color: #2b3a4d; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">Report Bug</a>
+    <a href="https://github.com/username/peercrypt/issues" style="background-color: #2b3a4d; color: #e6edf3; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 0 10px; display: inline-block; min-width: 120px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid #444c56;">Request Feature</a>
   </div>
 </div>
