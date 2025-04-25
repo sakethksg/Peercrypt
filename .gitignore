@@ -132,6 +132,7 @@ dmypy.json
 data/
 *.txt
 !requirements.txt
+!aimd_cong_output.json
 
 # Transfer stats files
 transfer_stats_*.json

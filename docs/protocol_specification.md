@@ -1,4 +1,4 @@
-## 1.3 Protocol State Machine
+## Protocol State Machine
 
 The PeerCrypt File Transfer Protocol follows a well-defined state machine that ensures reliable, ordered and secure file transfers. Each transfer session transitions through the following states:
 
