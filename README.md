@@ -4,10 +4,7 @@
 
 A **Computer Networks project** implementing a decentralized file transfer application with strong encryption, advanced congestion control, multiple transfer modes, and robust peer connections.
 
-<div style="background: linear-gradient(45deg, #1a1e24, #2d333b); padding: 20px; border-radius: 10px; margin: 20px 0; width: 80%; max-width: 600px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
-  <h1 style="color: white; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">PeerCrypt</h1>
-  <p style="color: #e6edf3; margin: 5px 0 0 0;">Advanced Computer Networks Implementation</p>
-</div>
+
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg?style=flat-square&logo=python)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
